@@ -14,7 +14,7 @@ public class ArrayList_LinkedList {
 
         arrayList.add("111");//有可能会出发数组扩容 影响速度
 
-        arrayList.add(1, "");//定位快 可能扩容 ，并且会移动原有元素位置
+        arrayList.add(1, "");//定位快 可能扩容(容量1.5倍) ，并且会移动原有元素位置
 
 
         LinkedList<String> linkedList = new LinkedList<>(); //链表(实现了 Deque接口 可当做队列使用) 修改比较快
