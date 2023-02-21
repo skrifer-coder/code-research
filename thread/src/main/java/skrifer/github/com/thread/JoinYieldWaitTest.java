@@ -19,9 +19,14 @@ public class JoinYieldWaitTest {
             @Override
             public void run() {
                 try {
-                    synchronized (this) {
-                        this.notify();
-                    }
+//                    synchronized (this) {
+//
+//                        this.notify();
+//                    }
+                    Thread.sleep(1000);
+                    flag = true;
+                    System.out.println("join thread");
+//                    thread.join();
                     Thread.sleep(3000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
@@ -31,14 +36,13 @@ public class JoinYieldWaitTest {
         };
 
         thread.start();
-        flag = true;
-        thread.join();
+//        thread.join();
 
 //        thread2.start();
         thread2.start();
-        synchronized (thread2){
-            thread2.wait();
-        }
+//        synchronized (thread2){
+//            thread2.wait();
+//        }
 
 
 
