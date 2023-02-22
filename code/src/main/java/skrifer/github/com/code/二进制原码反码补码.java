@@ -1,6 +1,6 @@
 package skrifer.github.com.code;
 
-public class 二级制原码反码补码 {
+public class 二进制原码反码补码 {
 
     /**
      * 计算机底层使用二进制形式的补码来计算和存储数据!!!!!!!!!!
@@ -173,11 +173,28 @@ public class 二级制原码反码补码 {
      */
 
     public static void main(String[] args) {
-        int leftShift = 10;
-        System.out.println("十进制:" + leftShift + ", 二进制:" + Integer.toBinaryString(leftShift));
-        leftShift = -10;
-        System.out.println("十进制:" + leftShift + ", 二进制:" + Integer.toBinaryString(leftShift));
-//        int newLeftShift = letfShift << 2;
+        int shift = 10;
+        System.out.println("shift十进制:" + shift + ", 二进制:" + Integer.toBinaryString(shift));
+        int leftShift = shift << 2;
+        System.out.println("rightShift十进制:" + leftShift + ", 二进制:" + Integer.toBinaryString(leftShift));
+        int rightShift = shift >> 2;
+        System.out.println("rightShift十进制:" + rightShift + ", 二进制:" + Integer.toBinaryString(rightShift));
+        rightShift = shift >>> 2;
+        System.out.println("rightShift十进制:" + rightShift + ", 二进制:" + Integer.toBinaryString(rightShift));
+        System.out.println("------------------------");
+
+
+        shift = -10;
+        System.out.println("shift十进制:" + shift + ", 二进制:" + Integer.toBinaryString(shift));
+        leftShift = shift << 2;
+        System.out.println("leftShift十进制:" + leftShift + ", 二进制:" + Integer.toBinaryString(leftShift));
+        rightShift = shift >> 2;
+        System.out.println("rightShift十进制:" + rightShift + ", 二进制:" + Integer.toBinaryString(rightShift));
+        rightShift = shift >>> 2;
+        System.out.println("rightShift十进制:" + rightShift + ", 二进制:" + Integer.toBinaryString(rightShift));
+        System.out.println("------------------------");
+
+
     }
 
 }
