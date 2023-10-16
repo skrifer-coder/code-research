@@ -21,6 +21,8 @@
         <module>designpattern</module>
         <module>jvm</module>
         <module>code</module>
+        <module>springsecurity57</module>
+        <module>http</module>
     </modules>
 
     <properties>

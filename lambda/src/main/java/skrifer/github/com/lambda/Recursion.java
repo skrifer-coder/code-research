@@ -6,7 +6,12 @@ package skrifer.github.com.lambda;
 public class Recursion {
 
     @FunctionalInterface
-    static interface Func {
+    interface Functional {
+        int apply(int a);
+    }
+
+    @FunctionalInterface//标志它只有一个待实现方法(能用lambda表达式的前提)
+    interface Func {
         int apply(Func self, int n);
     }
 
@@ -14,7 +19,7 @@ public class Recursion {
         //1.
         Functional[] functionals = new Functional[1];
         functionals[0] = n -> n <= 0 ? 1 : n * functionals[0].apply(n - 1);
-        System.out.println(functionals[0].apply(5));
+        System.out.println(functionals[0].apply(2));
 
         //2.
         Func func = ((self, n) -> n <= 0 ? 1 : (n * self.apply(self, n - 1)));
