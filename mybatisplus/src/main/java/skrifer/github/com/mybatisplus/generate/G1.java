@@ -3,6 +3,7 @@ package skrifer.github.com.mybatisplus.generate;
 import com.baomidou.mybatisplus.generator.FastAutoGenerator;
 import com.baomidou.mybatisplus.generator.config.OutputFile;
 import com.baomidou.mybatisplus.generator.config.rules.DbColumnType;
+import io.swagger.models.auth.In;
 
 import java.sql.Types;
 import java.util.Collections;
@@ -17,12 +18,12 @@ public class G1 {
     //author
     static String AUTHOR = "shenjun";
 
-    //表名
-    static String TABLE = "user2";
+    //表名,多表明逗号分开
+    static String TABLE = "mp_test";
     public static void main(String[] args) {
 
-        FastAutoGenerator.create("jdbc:mysql://127.0.0.1:3306/mybatis-plus?useUnicode=true&characterEncoding=utf-8&serverTimezone=GMT%2B8&useSSL=false",
-                "root", "123456")
+        FastAutoGenerator.create("jdbc:mysql://10.165.78.7:23311/kmbc_travel?useUnicode=true&characterEncoding=utf-8&serverTimezone=GMT%2B8&useSSL=false",
+                "local_travel", "travel1234!@#$")
                 .globalConfig(builder -> {
                     builder.author(AUTHOR) // 设置作者
                             .enableSwagger() // 开启 swagger 模式
@@ -40,7 +41,7 @@ public class G1 {
                 }))
                 .packageConfig(builder -> {
                     builder.parent("skrifer.github.com.mybatisplus.generate") // 所在包路径
-                            .moduleName("test") // 所属包名(会与上面包路径拼接成完整路劲)
+                            .moduleName("test") // 所属包名(会与上面包路径拼接成完整路劲,同样会加入到controller路径前)
                             .pathInfo(Collections.singletonMap(OutputFile.xml, OUT_PUT_PATH)); // 设置mapperXml生成路径(指定到项目或者模块就行，后面路径由上面两个配置指定)
                 })
                 .strategyConfig(builder -> {

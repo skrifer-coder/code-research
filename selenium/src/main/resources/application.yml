@@ -1,0 +1,10 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://10.165.78.7:23311/kmbc_travel?useUnicode=true&characterEncoding=utf-8&serverTimezone=GMT%2B8&useSSL=false
+    username: local_travel
+    password: travel1234!@#$
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: none

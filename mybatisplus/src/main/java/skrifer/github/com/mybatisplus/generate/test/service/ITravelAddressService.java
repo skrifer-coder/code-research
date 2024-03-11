@@ -1,6 +1,6 @@
 package skrifer.github.com.mybatisplus.generate.test.service;
 
-import skrifer.github.com.mybatisplus.generate.test.entity.User2;
+import skrifer.github.com.mybatisplus.generate.test.entity.TravelAddress;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 /**
@@ -9,8 +9,8 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * </p>
  *
  * @author shenjun
- * @since 2024-02-20
+ * @since 2024-02-28
  */
-public interface IUser2Service extends IService<User2> {
+public interface ITravelAddressService extends IService<TravelAddress> {
 
 }

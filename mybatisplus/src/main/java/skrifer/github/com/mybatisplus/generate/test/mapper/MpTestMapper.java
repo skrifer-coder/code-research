@@ -1,6 +1,6 @@
 package skrifer.github.com.mybatisplus.generate.test.mapper;
 
-import skrifer.github.com.mybatisplus.generate.test.entity.User2;
+import skrifer.github.com.mybatisplus.generate.test.entity.MpTest;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 /**
@@ -9,8 +9,8 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * </p>
  *
  * @author shenjun
- * @since 2024-02-20
+ * @since 2024-03-11
  */
-public interface User2Mapper extends BaseMapper<User2> {
+public interface MpTestMapper extends BaseMapper<MpTest> {
 
 }

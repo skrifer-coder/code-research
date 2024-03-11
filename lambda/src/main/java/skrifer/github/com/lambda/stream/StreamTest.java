@@ -112,7 +112,8 @@ public class StreamTest {
                         new Person("Max", 18),
                         new Person("Peter", 23),
                         new Person("Pamela", 23),
-                        new Person("David", 12));
+                        new Person("David", 12),
+                        new Person("David", 15));
 
 
         List<Person> filtered =
@@ -171,6 +172,17 @@ public class StreamTest {
         System.out.println(map);
 // {18=Max, 23=Peter;Pamela, 12=David}
 
+
+        Map<String, ArrayList<Object>> collect = persons.stream().collect(Collectors.toMap(p -> p.name, e -> {
+            ArrayList<Object> objects = new ArrayList<>();
+            objects.add(e);
+            return objects;
+        }, (e1, e2) -> {
+            e1.addAll(e2);
+            return e1;
+        }));
+
+        System.out.println(collect);
 
         //自定义收集器(Collector)
 
