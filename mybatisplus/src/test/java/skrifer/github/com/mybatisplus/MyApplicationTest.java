@@ -7,6 +7,9 @@ import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.PageDTO;
+import lombok.Data;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -23,8 +26,8 @@ import skrifer.github.com.mybatisplus.response.百度_Response;
 import skrifer.github.com.mybatisplus.response.行政区划区域检索Response;
 
 import java.math.BigDecimal;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
+import java.util.function.Function;
 
 @SpringBootTest
 public class MyApplicationTest {
@@ -165,49 +168,61 @@ public class MyApplicationTest {
         {
             //新增插入
             {
-                MpTest mpTest = new MpTest();
-                mpTest.setName("小王" + randomKey);
-                mpTest.setAge(20);
-                mpTest.setScore(new BigDecimal("99.5"));
-                mpTestService.save(mpTest);
+                {
+                    MpTest mpTest = new MpTest();
+                    mpTest.setName("小王" + randomKey);
+                    mpTest.setAge(20);
+                    mpTest.setScore(new BigDecimal("99.5"));
+                    mpTestService.save(mpTest);
+                }
+
+                {
+                    MpTest mpTest = new MpTest();
+                    mpTest.setName("小新" + randomKey);
+                    mpTest.setAge(20);
+                    mpTest.setScore(new BigDecimal("99.5"));
+                    mpTestService.saveBatch(Collections.singletonList(mpTest));
+                }
+
+                {
+                    MpTest mpTest = new MpTest();
+                    mpTest.setName("小白" + randomKey);
+                    mpTest.setAge(20);
+                    mpTest.setScore(new BigDecimal("99.5"));
+                    mpTestService.saveBatch(Collections.singletonList(mpTest), 2);
+                }
+
             }
 
+            //新增或更新
             {
-                MpTest mpTest = new MpTest();
-                mpTest.setName("小新" + randomKey);
-                mpTest.setAge(20);
-                mpTest.setScore(new BigDecimal("99.5"));
-                mpTestService.saveBatch(Collections.singletonList(mpTest));
-//                mpTestService.saveBatch(Collections.singletonList(mpTest), 2);
-            }
+                //TableId 注解属性值存在则更新记录，否插入一条记录
+                {
+                    MpTest mpTest = new MpTest();
+                    mpTest.setId(1L);// core
+                    mpTest.setScore(new BigDecimal("0"));
+                    mpTestService.saveOrUpdate(mpTest);
+                }
 
+                //根据updateWrapper尝试更新，否继续执行saveOrUpdate(T)的逻辑方法
+                {
+                    MpTest mpTest = new MpTest();
+                    mpTest.setId(1L);
+                    mpTest.setAge(99);
+                    UpdateWrapper<MpTest> updateWrapper = new UpdateWrapper<>();
+                    updateWrapper.eq("score", 0);
+                    mpTestService.saveOrUpdate(mpTest, updateWrapper);
+                }
 
-            //新增或更新(TableId 注解属性值存在则更新记录，否插入一条记录)
-            {
-                MpTest mpTest = new MpTest();
-                mpTest.setId(1L);// core
-                mpTest.setScore(new BigDecimal("0"));
-                mpTestService.saveOrUpdate(mpTest);
-            }
-
-            //根据updateWrapper尝试更新，否继续执行saveOrUpdate(T)的逻辑方法
-            {
-                MpTest mpTest = new MpTest();
-                mpTest.setId(1L);
-                mpTest.setAge(99);
-                UpdateWrapper<MpTest> updateWrapper = new UpdateWrapper<>();
-                updateWrapper.eq("score", 0);
-                mpTestService.saveOrUpdate(mpTest, updateWrapper);
-            }
-
-            {
-                MpTest mpTest = new MpTest();
-                mpTest.setId(1L);
-                mpTest.setName("小王 变 小黑" + randomKey);
-                mpTest.setAge(20);
-                mpTest.setScore(new BigDecimal("99.5"));
-                mpTestService.saveOrUpdateBatch(Collections.singletonList(mpTest));
+                {
+                    MpTest mpTest = new MpTest();
+                    mpTest.setId(1L);
+                    mpTest.setName("小王 变 小黑" + randomKey);
+                    mpTest.setAge(20);
+                    mpTest.setScore(new BigDecimal("99.5"));
+                    mpTestService.saveOrUpdateBatch(Collections.singletonList(mpTest));
 //                mpTestService.saveOrUpdateBatch(Collections.singletonList(mpTest), 100);
+                }
             }
 
             //remove删除
@@ -220,7 +235,104 @@ public class MyApplicationTest {
 
                 mpTestService.removeByMap(Collections.singletonMap("id", 1L));
 
-                mpTestService.removeByIds(Collections.singletonList("1L"));
+                mpTestService.removeByIds(Collections.singletonList(1L));
+            }
+
+            //update
+
+            {
+                // 根据 UpdateWrapper 条件，更新记录 需要设置sqlset
+                UpdateWrapper<MpTest> updateWrapper = new UpdateWrapper<>();
+                updateWrapper.setSql("name='6666',age=77");
+                updateWrapper.eq("id", 3L);
+                mpTestService.update(updateWrapper);
+                // 根据 whereWrapper 条件，更新记录
+                MpTest mpTest = new MpTest();
+                mpTest.setDelInd(true);
+                mpTestService.update(mpTest, updateWrapper);
+                // 根据 ID 选择修改
+                mpTest.setId(3L);
+                mpTest.setScore(new BigDecimal(-1));
+                mpTestService.updateById(mpTest);
+                // 根据ID 批量更新
+                mpTest.setAge(3);
+                mpTestService.updateBatchById(Collections.singletonList(mpTest));
+//                mpTestService.updateBatchById(Collection<T> entityList, int batchSize);
+            }
+
+            //get 一条
+            {
+                // 根据 ID 查询
+                MpTest byId = mpTestService.getById(3L);
+                // 根据 Wrapper，查询一条记录。结果集，如果是多个会抛出异常，随机取一条加上限制条件 wrapper.last("LIMIT 1")
+                QueryWrapper<MpTest> queryWrapper = new QueryWrapper<>();
+                queryWrapper.eq("age", 20);
+                queryWrapper.last("LIMIT 1");//防止多条报错
+                MpTest one1 = mpTestService.getOne(queryWrapper);
+                // 根据 Wrapper，查询一条记录
+                queryWrapper.last("");
+                MpTest one = mpTestService.getOne(queryWrapper, false);//此ex控制只是针对目标记录匹配到单条还是多条的控制输出（true就是默认只有一条，有多条就报错，false就是只取第一条【多条情况下会有一个警告log输出】），对其他的sql异常并没有捕捉控制仍然会报出异常
+                // 根据 Wrapper，查询一条记录
+                Map<String, Object> map = mpTestService.getMap(queryWrapper);
+                // 根据 Wrapper，查询一条记录(mapper 可配合 queryWrapper.select 用来返回指定的某列数据 减少通讯开支) 如果要查询多列可以用sql函数合并多列的值，后面在function函数中分割即可
+                queryWrapper.select("CONCAT(id,'||',name)");
+                queryWrapper.last("LIMIT 1");
+                Function<Object, TClass> mapper = name -> {
+                    TClass tClass = new TClass();
+                    tClass.setTName(name.toString());
+                    return tClass;
+                };
+
+                TClass obj = mpTestService.getObj(queryWrapper, mapper);
+//<V > V getObj(Wrapper < T > queryWrapper, Function < ? super Object, V > mapper);
+
+            }
+
+            //list
+            {
+                // 查询所有
+                List<MpTest> list1 = mpTestService.list();
+                // 查询列表
+                QueryWrapper<MpTest> queryWrapper = new QueryWrapper<>();
+                mpTestService.list(queryWrapper);
+                // 查询（根据ID 批量查询）
+                mpTestService.listByIds(Arrays.asList(3L));
+                // 查询（根据 columnMap 条件）
+                Map<String, Object> columnMap = new HashMap<>();
+                mpTestService.listByMap(columnMap);
+                // 查询所有列表
+                mpTestService.listMaps();
+                // 查询列表
+                mpTestService.listMaps(queryWrapper);
+                // 查询全部记录
+                mpTestService.listObjs();
+                // 查询全部记录
+                Function<Object, TClass> mapper = name -> {
+                    TClass tClass = new TClass();
+                    tClass.setId(Long.parseLong(name.toString()));
+                    return tClass;
+                };
+                mpTestService.listObjs(mapper);
+                // 根据 Wrapper 条件，查询全部记录
+                mpTestService.listObjs (queryWrapper);
+                // 根据 Wrapper 条件，查询全部记录
+                mpTestService.listObjs(queryWrapper, mapper);
+            }
+
+            //page
+            {
+                // 无条件分页查询
+                IPage<MpTest> page = new PageDTO<>();
+                page.setSize(5);
+                page.setCurrent(1);
+                mpTestService.page(page);
+                // 条件分页查询
+                QueryWrapper<MpTest> queryWrapper = new QueryWrapper<>();
+                mpTestService.page(page, queryWrapper);
+                // 无条件分页查询
+//                mpTestService.pageMaps(page);
+                // 条件分页查询
+//                mpTestService.pageMaps(page, queryWrapper);
             }
 
 
@@ -228,4 +340,10 @@ public class MyApplicationTest {
     }
 
 
+    @Data
+    static class TClass {
+        private Long id;
+        private String tName;
+        private int tAge;
+    }
 }
