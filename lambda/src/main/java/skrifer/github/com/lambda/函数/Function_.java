@@ -17,8 +17,19 @@ public class Function_ {
         System.out.println(function1.apply("111"));
     }
 
+    public String get() {
+        return "";
+    }
 
 
     public static void main(String[] args) {
+        Function_ function_ = new Function_();
+        function_.test(Function_::get);
+    }
+
+
+    public <T, R> void test(Function<T, R> function) {
+        T t = null;
+        R apply = function.apply(t);
     }
 }

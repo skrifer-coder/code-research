@@ -5,10 +5,19 @@ import cn.hutool.core.util.RandomUtil;
 import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
+import com.baomidou.mybatisplus.extension.conditions.query.QueryChainWrapper;
+import com.baomidou.mybatisplus.extension.conditions.update.LambdaUpdateChainWrapper;
+import com.baomidou.mybatisplus.extension.conditions.update.UpdateChainWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.plugins.pagination.PageDTO;
+import com.baomidou.mybatisplus.extension.toolkit.SimpleQuery;
 import lombok.Data;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +25,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import skrifer.github.com.mybatisplus.generate.test.entity.MpTest;
 import skrifer.github.com.mybatisplus.generate.test.entity.TravelAddress;
 import skrifer.github.com.mybatisplus.generate.test.entity.贝壳租房各城市查询地址;
+import skrifer.github.com.mybatisplus.generate.test.mapper.MpTestMapper;
 import skrifer.github.com.mybatisplus.generate.test.mapper.TravelAddressMapper;
 import skrifer.github.com.mybatisplus.generate.test.mapper.贝壳租房价格信息Mapper;
 import skrifer.github.com.mybatisplus.generate.test.mapper.贝壳租房各城市查询地址Mapper;
@@ -28,6 +38,7 @@ import skrifer.github.com.mybatisplus.response.行政区划区域检索Response;
 import java.math.BigDecimal;
 import java.util.*;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @SpringBootTest
 public class MyApplicationTest {
@@ -49,6 +60,9 @@ public class MyApplicationTest {
 
     @Autowired
     IMpTestService mpTestService;
+
+    @Autowired
+    MpTestMapper mpTestMapper;
 
 //    Semaphore semaphore = new Semaphore(5);
 
@@ -168,122 +182,124 @@ public class MyApplicationTest {
         {
             //新增插入
             {
-                {
-                    MpTest mpTest = new MpTest();
-                    mpTest.setName("小王" + randomKey);
-                    mpTest.setAge(20);
-                    mpTest.setScore(new BigDecimal("99.5"));
-                    mpTestService.save(mpTest);
-                }
-
-                {
-                    MpTest mpTest = new MpTest();
-                    mpTest.setName("小新" + randomKey);
-                    mpTest.setAge(20);
-                    mpTest.setScore(new BigDecimal("99.5"));
-                    mpTestService.saveBatch(Collections.singletonList(mpTest));
-                }
-
-                {
-                    MpTest mpTest = new MpTest();
-                    mpTest.setName("小白" + randomKey);
-                    mpTest.setAge(20);
-                    mpTest.setScore(new BigDecimal("99.5"));
-                    mpTestService.saveBatch(Collections.singletonList(mpTest), 2);
-                }
+//                {
+//                    MpTest mpTest = new MpTest();
+//                    mpTest.setName("小王" + randomKey);
+//                    mpTest.setAge(20);
+//                    mpTest.setScore(new BigDecimal("99.5"));
+//                    mpTestService.save(mpTest);
+//                }
+//
+//                {
+//                    MpTest mpTest = new MpTest();
+//                    mpTest.setName("小新" + randomKey);
+//                    mpTest.setAge(20);
+//                    mpTest.setScore(new BigDecimal("99.5"));
+//                    mpTestService.saveBatch(Collections.singletonList(mpTest));
+//                }
+//
+//                {
+//                    MpTest mpTest = new MpTest();
+//                    mpTest.setName("小白" + randomKey);
+//                    mpTest.setAge(20);
+//                    mpTest.setScore(new BigDecimal("99.5"));
+//                    mpTestService.saveBatch(Collections.singletonList(mpTest), 2);
+//                }
 
             }
 
             //新增或更新
             {
-                //TableId 注解属性值存在则更新记录，否插入一条记录
-                {
-                    MpTest mpTest = new MpTest();
-                    mpTest.setId(1L);// core
-                    mpTest.setScore(new BigDecimal("0"));
-                    mpTestService.saveOrUpdate(mpTest);
-                }
-
-                //根据updateWrapper尝试更新，否继续执行saveOrUpdate(T)的逻辑方法
-                {
-                    MpTest mpTest = new MpTest();
-                    mpTest.setId(1L);
-                    mpTest.setAge(99);
-                    UpdateWrapper<MpTest> updateWrapper = new UpdateWrapper<>();
-                    updateWrapper.eq("score", 0);
-                    mpTestService.saveOrUpdate(mpTest, updateWrapper);
-                }
-
-                {
-                    MpTest mpTest = new MpTest();
-                    mpTest.setId(1L);
-                    mpTest.setName("小王 变 小黑" + randomKey);
-                    mpTest.setAge(20);
-                    mpTest.setScore(new BigDecimal("99.5"));
-                    mpTestService.saveOrUpdateBatch(Collections.singletonList(mpTest));
-//                mpTestService.saveOrUpdateBatch(Collections.singletonList(mpTest), 100);
-                }
+//                //TableId 注解属性值存在则更新记录，否插入一条记录
+//                {
+//                    MpTest mpTest = new MpTest();
+//                    mpTest.setId(1L);// core
+//                    mpTest.setScore(new BigDecimal("0"));
+////                    mpTestService.saveOrUpdate(mpTest);
+//                }
+//
+//                //根据updateWrapper尝试更新，否继续执行saveOrUpdate(T)的逻辑方法
+//                {
+//                    MpTest mpTest = new MpTest();
+//                    mpTest.setId(1L);
+//                    mpTest.setAge(99);
+//                    UpdateWrapper<MpTest> updateWrapper = new UpdateWrapper<>();
+//                    updateWrapper.eq("score", 0);
+////                    mpTestService.saveOrUpdate(mpTest, updateWrapper);
+//                }
+//
+//                {
+//                    MpTest mpTest = new MpTest();
+//                    mpTest.setId(1L);
+//                    mpTest.setName("小王 变 小黑" + randomKey);
+//                    mpTest.setAge(20);
+//                    mpTest.setScore(new BigDecimal("99.5"));
+////                    mpTestService.saveOrUpdateBatch(Collections.singletonList(mpTest));
+////                mpTestService.saveOrUpdateBatch(Collections.singletonList(mpTest), 100);
+//                }
             }
 
             //remove删除
             {
                 QueryWrapper<MpTest> queryWrapper = new QueryWrapper<>();
-                queryWrapper.likeLeft("name", "小新%");
-                mpTestService.remove(queryWrapper);
-
-                mpTestService.removeById(1L);
-
-                mpTestService.removeByMap(Collections.singletonMap("id", 1L));
-
-                mpTestService.removeByIds(Collections.singletonList(1L));
+                LambdaQueryWrapper<MpTest> lambda = queryWrapper.lambda();
+//                lambda.
+//                queryWrapper.likeLeft("name", "小新%");
+//                mpTestService.remove(queryWrapper);
+//
+//                mpTestService.removeById(1L);
+//
+//                mpTestService.removeByMap(Collections.singletonMap("id", 1L));
+//
+//                mpTestService.removeByIds(Collections.singletonList(1L));
             }
 
             //update
 
             {
                 // 根据 UpdateWrapper 条件，更新记录 需要设置sqlset
-                UpdateWrapper<MpTest> updateWrapper = new UpdateWrapper<>();
-                updateWrapper.setSql("name='6666',age=77");
-                updateWrapper.eq("id", 3L);
-                mpTestService.update(updateWrapper);
-                // 根据 whereWrapper 条件，更新记录
-                MpTest mpTest = new MpTest();
-                mpTest.setDelInd(true);
-                mpTestService.update(mpTest, updateWrapper);
-                // 根据 ID 选择修改
-                mpTest.setId(3L);
-                mpTest.setScore(new BigDecimal(-1));
-                mpTestService.updateById(mpTest);
-                // 根据ID 批量更新
-                mpTest.setAge(3);
-                mpTestService.updateBatchById(Collections.singletonList(mpTest));
+//                UpdateWrapper<MpTest> updateWrapper = new UpdateWrapper<>();
+//                updateWrapper.setSql("name='6666',age=77");
+//                updateWrapper.eq("id", 3L);
+//                mpTestService.update(updateWrapper);
+//                // 根据 whereWrapper 条件，更新记录
+//                MpTest mpTest = new MpTest();
+//                mpTest.setDelInd(true);
+//                mpTestService.update(mpTest, updateWrapper);
+//                // 根据 ID 选择修改
+//                mpTest.setId(3L);
+//                mpTest.setScore(new BigDecimal(-1));
+//                mpTestService.updateById(mpTest);
+//                // 根据ID 批量更新
+//                mpTest.setAge(3);
+//                mpTestService.updateBatchById(Collections.singletonList(mpTest));
 //                mpTestService.updateBatchById(Collection<T> entityList, int batchSize);
             }
 
             //get 一条
             {
                 // 根据 ID 查询
-                MpTest byId = mpTestService.getById(3L);
-                // 根据 Wrapper，查询一条记录。结果集，如果是多个会抛出异常，随机取一条加上限制条件 wrapper.last("LIMIT 1")
-                QueryWrapper<MpTest> queryWrapper = new QueryWrapper<>();
-                queryWrapper.eq("age", 20);
-                queryWrapper.last("LIMIT 1");//防止多条报错
-                MpTest one1 = mpTestService.getOne(queryWrapper);
-                // 根据 Wrapper，查询一条记录
-                queryWrapper.last("");
-                MpTest one = mpTestService.getOne(queryWrapper, false);//此ex控制只是针对目标记录匹配到单条还是多条的控制输出（true就是默认只有一条，有多条就报错，false就是只取第一条【多条情况下会有一个警告log输出】），对其他的sql异常并没有捕捉控制仍然会报出异常
-                // 根据 Wrapper，查询一条记录
-                Map<String, Object> map = mpTestService.getMap(queryWrapper);
-                // 根据 Wrapper，查询一条记录(mapper 可配合 queryWrapper.select 用来返回指定的某列数据 减少通讯开支) 如果要查询多列可以用sql函数合并多列的值，后面在function函数中分割即可
-                queryWrapper.select("CONCAT(id,'||',name)");
-                queryWrapper.last("LIMIT 1");
-                Function<Object, TClass> mapper = name -> {
-                    TClass tClass = new TClass();
-                    tClass.setTName(name.toString());
-                    return tClass;
-                };
-
-                TClass obj = mpTestService.getObj(queryWrapper, mapper);
+                MpTest byId = mpTestService.getById(1L);
+//                // 根据 Wrapper，查询一条记录。结果集，如果是多个会抛出异常，随机取一条加上限制条件 wrapper.last("LIMIT 1")
+//                QueryWrapper<MpTest> queryWrapper = new QueryWrapper<>();
+//                queryWrapper.eq("age", 20);
+//                queryWrapper.last("LIMIT 1");//防止多条报错
+//                MpTest one1 = mpTestService.getOne(queryWrapper);
+//                // 根据 Wrapper，查询一条记录
+//                queryWrapper.last("");
+//                MpTest one = mpTestService.getOne(queryWrapper, false);//此ex控制只是针对目标记录匹配到单条还是多条的控制输出（true就是默认只有一条，有多条就报错，false就是只取第一条【多条情况下会有一个警告log输出】），对其他的sql异常并没有捕捉控制仍然会报出异常
+//                // 根据 Wrapper，查询一条记录
+//                Map<String, Object> map = mpTestService.getMap(queryWrapper);
+//                // 根据 Wrapper，查询一条记录(mapper 可配合 queryWrapper.select 用来返回指定的某列数据 减少通讯开支) 如果要查询多列可以用sql函数合并多列的值，后面在function函数中分割即可
+//                queryWrapper.select("CONCAT(id,'||',name)");
+//                queryWrapper.last("LIMIT 1");
+//                Function<Object, TClass> mapper = name -> {
+//                    TClass tClass = new TClass();
+//                    tClass.setTName(name.toString());
+//                    return tClass;
+//                };
+//
+//                TClass obj = mpTestService.getObj(queryWrapper, mapper);
 //<V > V getObj(Wrapper < T > queryWrapper, Function < ? super Object, V > mapper);
 
             }
@@ -291,52 +307,295 @@ public class MyApplicationTest {
             //list
             {
                 // 查询所有
-                List<MpTest> list1 = mpTestService.list();
-                // 查询列表
-                QueryWrapper<MpTest> queryWrapper = new QueryWrapper<>();
-                mpTestService.list(queryWrapper);
-                // 查询（根据ID 批量查询）
-                mpTestService.listByIds(Arrays.asList(3L));
-                // 查询（根据 columnMap 条件）
-                Map<String, Object> columnMap = new HashMap<>();
-                mpTestService.listByMap(columnMap);
-                // 查询所有列表
-                mpTestService.listMaps();
-                // 查询列表
-                mpTestService.listMaps(queryWrapper);
-                // 查询全部记录
-                mpTestService.listObjs();
-                // 查询全部记录
-                Function<Object, TClass> mapper = name -> {
-                    TClass tClass = new TClass();
-                    tClass.setId(Long.parseLong(name.toString()));
-                    return tClass;
-                };
-                mpTestService.listObjs(mapper);
-                // 根据 Wrapper 条件，查询全部记录
-                mpTestService.listObjs (queryWrapper);
-                // 根据 Wrapper 条件，查询全部记录
-                mpTestService.listObjs(queryWrapper, mapper);
+//                List<MpTest> list1 = mpTestService.list();
+//                // 查询列表
+//                QueryWrapper<MpTest> queryWrapper = new QueryWrapper<>();
+//                mpTestService.list(queryWrapper);
+//                // 查询（根据ID 批量查询）
+//                mpTestService.listByIds(Arrays.asList(3L));
+//                // 查询（根据 columnMap 条件）
+//                Map<String, Object> columnMap = new HashMap<>();
+//                mpTestService.listByMap(columnMap);
+//                // 查询所有列表
+//                mpTestService.listMaps();
+//                // 查询列表
+//                mpTestService.listMaps(queryWrapper);
+//                // 查询全部记录
+//                mpTestService.listObjs();
+//                // 查询全部记录
+//                Function<Object, TClass> mapper = name -> {
+//                    TClass tClass = new TClass();
+//                    tClass.setId(Long.parseLong(name.toString()));
+//                    return tClass;
+//                };
+//                mpTestService.listObjs(mapper);
+//                // 根据 Wrapper 条件，查询全部记录
+//                mpTestService.listObjs(queryWrapper);
+//                // 根据 Wrapper 条件，查询全部记录
+//                mpTestService.listObjs(queryWrapper, mapper);
             }
 
             //page
             {
                 // 无条件分页查询
-                IPage<MpTest> page = new PageDTO<>();
-                page.setSize(5);
-                page.setCurrent(1);
-                mpTestService.page(page);
-                // 条件分页查询
-                QueryWrapper<MpTest> queryWrapper = new QueryWrapper<>();
-                mpTestService.page(page, queryWrapper);
-                // 无条件分页查询
-//                mpTestService.pageMaps(page);
-                // 条件分页查询
-//                mpTestService.pageMaps(page, queryWrapper);
+//                IPage<MpTest> page = new PageDTO<>();
+//                page.setSize(5);
+//                page.setCurrent(1);
+//                mpTestService.page(page);
+//
+//                // 条件分页查询
+//                QueryWrapper<MpTest> queryWrapper = new QueryWrapper<>();
+//                queryWrapper.eq("id", 4);
+//                mpTestService.page(page, queryWrapper);
+//
+//                // 无条件分页查询
+//                IPage<Map<String, Object>> p = new Page<>();
+//                mpTestService.pageMaps(p);
+//                // 条件分页查询
+//                mpTestService.pageMaps(p, queryWrapper);
+            }
+
+            //count
+            {
+//                mpTestService.count();
+//
+//                QueryWrapper<MpTest> queryWrapper = new QueryWrapper<>();
+//                queryWrapper.eq("id", 4);
+//                mpTestService.count(queryWrapper);
+            }
+
+            //chain
+            {
+                //query
+                {
+                    // 链式查询 普通
+//                    QueryChainWrapper<MpTest> query = mpTestService.query();
+//                    // 链式查询 lambda 式。注意：不支持 Kotlin
+//                    LambdaQueryChainWrapper<MpTest> mpTestLambdaQueryChainWrapper = mpTestService.lambdaQuery();
+//
+//                    // 示例：
+//                    MpTest id = query.eq("id", 3L).one();
+//                    List<MpTest> list = mpTestLambdaQueryChainWrapper.eq(MpTest::getId, 3L).list();
+                }
+
+                //update
+                {
+                    // 链式更改 普通
+//                    UpdateChainWrapper<MpTest> update = mpTestService.update();
+//                    // 链式更改 lambda 式。注意：不支持 Kotlin
+//                    LambdaUpdateChainWrapper<MpTest> mpTestLambdaUpdateChainWrapper = mpTestService.lambdaUpdate();
+//
+//                    // 示例：
+//                    update.eq("id", 3L).remove();
+//                    mpTestLambdaUpdateChainWrapper.eq(MpTest::getId, 3L).update(entity);
+                }
             }
 
 
         }
+
+        //mapper crud
+
+        //insert
+        {
+            // 插入一条记录
+//            MpTest mpTest = new MpTest();
+//            mpTest.setName("mapper insert");
+//            mpTest.setScore(BigDecimal.ONE);
+//            mpTest.setAge(100);
+//            mpTestMapper.insert(mpTest);
+        }
+
+        //delete
+
+        {
+            // 根据 entity 条件，删除记录
+//            QueryWrapper<MpTest> queryWrapper = new QueryWrapper<>();
+////            mpTestMapper.delete(queryWrapper);
+//            // 删除（根据ID 批量删除）
+//            Collection<Long> ids = new ArrayList<>();
+//            ids.add(3L);
+//            mpTestMapper.deleteBatchIds(ids);
+//            // 根据 ID 删除
+//            mpTestMapper.deleteById(3L);
+//            // 根据 columnMap 条件，删除记录
+//            Map<String, Object> columnMap = new HashMap<>();
+//            columnMap.put("id", 3L);
+//            mpTestMapper.deleteByMap(columnMap);
+        }
+
+        //update
+        {
+            // 根据 whereWrapper 条件，更新记录
+//            QueryWrapper<MpTest> queryWrapper = new QueryWrapper<>();
+//            MpTest mpTest = new MpTest();
+//            mpTest.setName("mapper insert");
+//            mpTest.setScore(BigDecimal.ONE);
+//            mpTest.setAge(100);
+//            mpTestMapper.update(mpTest, queryWrapper);
+//            // 根据 ID 修改
+//            mpTest.setId(3L);
+//            mpTestMapper.updateById(mpTest);
+        }
+
+        //select
+        {
+            // 根据 ID 查询
+//            mpTestMapper.selectById(3L);
+//// 根据 entity 条件，查询一条记录
+//            QueryWrapper<MpTest> queryWrapper = new QueryWrapper<>();
+//            queryWrapper.eq("id", 3L);
+//            mpTestMapper.selectOne(queryWrapper);
+//
+//// 查询（根据ID 批量查询）
+//            Collection<Long> ids = new ArrayList<>();
+//            ids.add(3L);
+//            mpTestMapper.selectBatchIds(ids);
+//// 根据 entity 条件，查询全部记录
+//            mpTestMapper.selectList(queryWrapper);
+//// 查询（根据 columnMap 条件）
+//            Map<String, Object> columnMap = new HashMap<>();
+//            columnMap.put("id", 3L);
+//            mpTestMapper.selectByMap(columnMap);
+//// 根据 Wrapper 条件，查询全部记录
+//            mpTestMapper.selectMaps(queryWrapper);
+//// 根据 Wrapper 条件，查询全部记录。注意： 只返回第一个字段的值
+//            mpTestMapper.selectObjs(queryWrapper);
+//
+//// 根据 entity 条件，查询全部记录（并翻页）
+//            IPage<MpTest> page = new PageDTO<>();
+//            page.setSize(5);
+//            page.setCurrent(1);
+//            mpTestMapper.selectPage(page, queryWrapper);
+//// 根据 Wrapper 条件，查询全部记录（并翻页）
+//            IPage<Map<String, Object>> page1 = new Page<Map<String, Object>>();
+//            mpTestMapper.selectMapsPage(page1, queryWrapper);
+//// 根据 Wrapper 条件，查询总记录数
+//            mpTestMapper.selectCount(queryWrapper);
+        }
+
+        //ActiveRecord(需要实体 extends Model<T>)
+        {
+//            MpTest mpTest = new MpTest();
+//            mpTest.setName("ActiveRecord");
+//            mpTest.setScore(BigDecimal.ONE);
+//            mpTest.setAge(100);
+//            mpTest.insert();
+//            mpTest.selectAll();
+//            mpTest.updateById();
+//
+//            mpTest.deleteById();
+        }
+
+        //simplequery
+        {
+            // 查询表内记录，封装返回为Map<属性,实体>
+//            Map<Long, MpTest> longMpTestMap = SimpleQuery.keyMap(Wrappers.lambdaQuery(), MpTest::getId, mpTest -> System.out.println(mpTest.getAge()));
+//// 查询表内记录，封装返回为Map<属性,实体>，考虑了并行流的情况
+//            Map<Long, MpTest> longMpTestMap1 = SimpleQuery.keyMap(Wrappers.lambdaQuery(), MpTest::getId, true, mpTest -> System.out.println(mpTest.getAge()));
+//
+//            // 查询表内记录，封装返回为Map<属性,属性>
+//            Map<Long, String> map = SimpleQuery.map(Wrappers.lambdaQuery(), MpTest::getId, MpTest::getName, mpTest -> System.out.println(mpTest.getAge()));
+//// 查询表内记录，封装返回为Map<属性,属性>，考虑了并行流的情况
+//            Map<Long, String> map1 = SimpleQuery.map(Wrappers.lambdaQuery(), MpTest::getId, MpTest::getName, true, mpTest -> System.out.println(mpTest.getAge()));
+//
+//
+//            // 查询表内记录，封装返回为Map<属性,List<实体>>
+//            Map<String, List<MpTest>> group1 = SimpleQuery.group(Wrappers.lambdaQuery(), MpTest::getName, e -> System.out.println(e.getAge()));
+//// 查询表内记录，封装返回为Map<属性,List<实体>>，考虑了并行流的情况
+//            SimpleQuery.group(Wrappers.lambdaQuery(), MpTest::getName, true, e -> System.out.println(e.getAge()));
+//// 查询表内记录，封装返回为Map<属性,分组后对集合进行的下游收集器>
+//            SimpleQuery.group(Wrappers.lambdaQuery(), MpTest::getName, Collectors.mapping(MpTest::getName, Collectors.toList()), e -> System.out.println(e.getAge()));
+//// 查询表内记录，封装返回为Map<属性,分组后对集合进行的下游收集器>，考虑了并行流的情况
+////            M group(LambdaQueryWrapper<T> wrapper, SFunction<T, K> sFunction, Collector<? super T, A, D> downstream, boolean isParallel, Consumer<T>... peeks);
+//
+//
+//            // 查询表内记录，封装返回为List<属性>
+//            List<String> list1 = SimpleQuery.list(Wrappers.lambdaQuery(), MpTest::getName, e -> System.out.println(e.getAge()));
+//// 查询表内记录，封装返回为List<属性>，考虑了并行流的情况
+//            List<String> list2 = SimpleQuery.list(Wrappers.lambdaQuery(), MpTest::getName, true, e -> System.out.println(e.getAge()));
+
+        }
+
+        //Db(当前版本已经不存在)
+        {
+//            // 根据id查询
+//            Db.listByIds(Arrays.asList(1L, 2L), Entity.class);
+//// 根据条件构造器查询
+//            Db.list(Wrappers.lambdaQuery(Entity.class));
+//// 批量根据id更新
+//            Db.updateBatchById(list);
+        }
+    }
+
+    /**
+     * 以下出现的第一个入参boolean condition表示该条件是否加入最后生成的sql中，例如：query.like(StringUtils.isNotBlank(name), Entity::getName, name) .eq(age!=null && age >= 0, Entity::getAge, age)
+     * 以下代码块内的多个方法均为从上往下补全个别boolean类型的入参,默认为true
+     * 以下出现的泛型Param均为Wrapper的子类实例(均具有AbstractWrapper的所有方法)
+     * 以下方法在入参中出现的R为泛型,在普通wrapper中是String,在LambdaWrapper中是函数(例:Entity::getId,Entity为实体类,getId为字段id的getter Method)
+     * 以下方法入参中的R column均表示数据库字段,当R具体类型为String时则为数据库字段名(字段名是数据库关键字的自己用转义符包裹!)而不是实体类数据字段名!!!
+     * 以下举例均为使用普通wrapper,入参为Map和List的均以json形式表现!
+     * 使用中如果入参的Map或者List为空,则不会加入最后生成的sql中!!!
+     */
+    private void 条件构造器() {
+
+        QueryWrapper<MpTest> queryWrapper = new QueryWrapper<>();
+
+        /**
+         * allEq(Map<R, V> params)
+         * allEq(Map<R, V> params, boolean null2IsNull)
+         * allEq(boolean condition, Map<R, V> params, boolean null2IsNull)
+         *
+         * params : key为数据库字段名,value为字段值
+         * null2IsNull : 为true则在map的value为null时调用 isNull 方法,为false时则忽略value为null的
+         *
+         * 例1: allEq({id:1,name:"老王",age:null})--->id = 1 and name = '老王' and age is null
+         * 例2: allEq({id:1,name:"老王",age:null}, false)--->id = 1 and name = '老王'
+         */
+
+        /**
+         * allEq(BiPredicate<R, V> filter, Map<R, V> params)
+         * allEq(BiPredicate<R, V> filter, Map<R, V> params, boolean null2IsNull)
+         * allEq(boolean condition, BiPredicate<R, V> filter, Map<R, V> params, boolean null2IsNull)
+         *
+         * filter : 过滤函数,是否允许字段传入比对条件中
+         *
+         * 例1: allEq((k,v) -> k.contains("a"), {id:1,name:"老王",age:null})--->name = '老王' and age is null
+         * 例2: allEq((k,v) -> k.contains("a"), {id:1,name:"老王",age:null}, false)--->name = '老王'
+         */
+
+        /**
+         * eq(R column, Object val)
+         * eq(boolean condition, R column, Object val)
+         *
+         *  例: eq("name", "老王")--->name = '老王'
+         */
+
+        /**
+         * ne(R column, Object val)
+         * ne(boolean condition, R column, Object val)
+         * 例: ne("name", "老王")--->name <> '老王'
+         */
+
+        /**
+         * gt(R column, Object val) 、ge(R column, Object val)
+         * gt(boolean condition, R column, Object val) 、ge(boolean condition, R column, Object val)
+         * 例: gt("age", 18)--->age > 18 、ge("age", 18)--->age >= 18
+         */
+
+        /**
+         * lt(R column, Object val) 、le(R column, Object val)
+         * lt(boolean condition, R column, Object val) 、 le(boolean condition, R column, Object val)
+         *  例: lt("age", 18)--->age < 18 、 le("age", 18)--->age <= 18
+         */
+
+        /**
+         * between(R column, Object val1, Object val2) 、 notBetween(R column, Object val1, Object val2)
+         * between(boolean condition, R column, Object val1, Object val2) 、 notBetween(boolean condition, R column, Object val1, Object val2)
+         *
+         * 例: between("age", 18, 30)--->age between 18 and 30 、 notBetween("age", 18, 30)--->age not between 18 and 30
+         */
+
     }
 
 

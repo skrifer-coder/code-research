@@ -1,0 +1,14 @@
+version: '0.1'
+services:
+  hango:
+    image: qiuchenjun/hgdb-see:4.5.8
+    volumes:
+      - /opt/highgov4/data:/home/highgo/hgdb
+    restart: always
+    ports:
+      - 5866:5866
+    environment:
+      - TZ=Asia/Shanghai
+      - LANG=en_US.utf8
+      - POSTGRES_HOST_AUTH_METHOD=sm3
+      - POSTGRES_PASSWORD=123456

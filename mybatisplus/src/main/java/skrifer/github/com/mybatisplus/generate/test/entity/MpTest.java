@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
+import com.baomidou.mybatisplus.extension.activerecord.Model;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -18,9 +19,9 @@ import io.swagger.annotations.ApiModelProperty;
  * @author shenjun
  * @since 2024-03-11
  */
-@TableName("mp_test")
+@TableName(value = "mp_test", schema = "lj28s")
 @ApiModel(value = "MpTest对象", description = "")
-public class MpTest implements Serializable {
+public class MpTest extends Model<MpTest> implements Serializable {
 
     private static final long serialVersionUID = 1L;
 

@@ -16,6 +16,15 @@ public class Suppiler_ {
     }
 
     public static void main(String[] args) {
+        Suppiler_ suppiler_ = new Suppiler_();
+        suppiler_.test(suppiler_::get);
+    }
 
+    public String get() {
+        return "";
+    }
+
+    public <R> R test(Supplier<R> supplier) {
+        return supplier.get();
     }
 }

@@ -1,0 +1,12 @@
+version: '0.1'
+services:
+  db:
+    image: registry.cn-hangzhou.aliyuncs.com/skrifer/cck:mysql5.7
+    volumes:
+      - /opt/mysql/data:/var/lib/mysql
+      - /opt/mysql/conf/mysql.cnf:/etc/mysql/mysql.conf.d/mysqld.cnf
+    restart: always
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: 123456

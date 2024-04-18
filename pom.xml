@@ -24,6 +24,10 @@
         <module>springsecurity57</module>
         <module>http</module>
         <module>selenium</module>
+        <module>docker</module>
+<!--        <module>snmp</module>-->
+        <module>jpa</module>
+<!--        <module>kafka</module>-->
     </modules>
 
     <properties>

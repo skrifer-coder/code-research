@@ -63,6 +63,11 @@
             <artifactId>hutool-all</artifactId>
             <version>5.8.0.M4</version>
         </dependency>
+        <dependency>
+            <groupId>com.highgo</groupId>
+            <artifactId>HgdbJdbc</artifactId>
+            <version>6.2.4</version>
+        </dependency>
     </dependencies>
 
     <profiles>

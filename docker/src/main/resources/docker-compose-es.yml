@@ -1,0 +1,36 @@
+version: '0.1'
+services:
+  # search engine
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch-oss:7.0.1
+    #        image: elasticsearch:7.9.0
+    container_name: elasticsearch
+    environment:
+      - discovery.type=single-node
+      - http.port=9200
+      - http.cors.enabled=true
+      #- http.cors.allow-origin=http://192.168.93.139:1358
+      #配合dejavu需要设置为*不然会报403
+      - http.cors.allow-origin=*
+      #- http.cors.allow-origin=http://localhost:1358,http://127.0.0.1:1358
+      - http.cors.allow-headers=X-Requested-With,X-Auth-Token,Content-Type,Content-Length,Authorization
+      - http.cors.allow-credentials=false
+      - bootstrap.memory_lock=true
+      - 'ES_JAVA_OPTS=-Xms512m -Xmx512m'
+    volumes:
+      - /opt/es/data:/usr/share/elasticsearch/data
+      - /opt/es/plugins:/usr/share/elasticsearch/plugins
+      - /opt/es/logs:/usr/share/elasticsearch/logs
+    ports:
+      - '9200:9200'
+      - '9300:9300'
+  # elasticsearch browser
+  dejavu:
+    image: appbaseio/dejavu:3.2.3
+    container_name: dejavu
+    ports:
+      - '1358:1358'
+    links:
+      - elasticsearch
+
+  # 分词插件在 https://github.com/infinilabs/analysis-ik/releases/tag/v7.0.1获取，尽量与es版本一致, 解压到plugins路径下(必须解压到一个目录下 比如自己新建一个ik文件夹挂到plugins下面!!!!!!!!)

@@ -1,12 +1,23 @@
 spring:
   datasource:
-    driver-class-name:  com.mysql.cj.jdbc.Driver
+#    driver-class-name:  com.mysql.cj.jdbc.Driver
 #    url: jdbc:mysql://127.0.0.1:3306/mybatis-plus?useUnicode=true&characterEncoding=utf-8&serverTimezone=GMT%2B8&useSSL=false
 #    username: root
 #    password: 123456
-    url: jdbc:mysql://10.165.78.7:23311/kmbc_travel?useUnicode=true&characterEncoding=utf-8&serverTimezone=GMT%2B8&useSSL=false
-    username: local_travel
-    password: travel1234!@#$
+#    url: jdbc:mysql://10.165.78.7:23311/kmbc_travel?useUnicode=true&characterEncoding=utf-8&serverTimezone=GMT%2B8&useSSL=false
+#    username: local_travel
+#    password: travel1234!@#$
+
+#    ##翰高数据库
+#    driver-class-name: com.highgo.jdbc.Driver
+#    url: jdbc:highgo://10.165.148.132:5866/highgo
+#    username: sysdba
+#    password: sysdba
+    ##教育较大资管数据库
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://10.165.78.7:23311/resmgr?useUnicode=true&characterEncoding=utf-8&serverTimezone=GMT%2B8&useSSL=false
+    username: local_resmgr
+    password: kedacom@123
   profiles:
     active: '@profiles.active@'
 mybatis-plus:

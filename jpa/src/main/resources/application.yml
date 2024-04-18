@@ -1,0 +1,10 @@
+spring:
+  datasource:
+    driver-class-name: com.highgo.jdbc.Driver
+    url: jdbc:highgo://10.165.148.132:5866/highgo
+    username: sysdba
+    password: sysdba
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update

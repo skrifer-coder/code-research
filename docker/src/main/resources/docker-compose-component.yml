@@ -1,0 +1,47 @@
+version: '0.1'
+services:
+  zookeeper:
+    image: wurstmeister/zookeeper
+    volumes:
+      - /opt/kafka/data:/data
+    ports:
+      - 2182:2181
+    container_name: zookeeper01
+  kafka9094:
+    image: wurstmeister/kafka
+    ports:
+      - 9092:9092
+    container_name: kafka01
+    environment:
+      KAFKA_BROKER_ID: 0
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://10.165.32.84:9092
+      KAFKA_CREATE_TOPICS: "kafeidou:2:0"   #kafka启动后初始化一个有2个partition(分区)0个副本名叫kafeidou的topic
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
+    volumes:
+      - /opt/kafka/logs:/kafka
+    depends_on:
+      - zookeeper
+  mysql:
+    image: registry.cn-hangzhou.aliyuncs.com/skrifer/cck:mysql5.7
+    container_name: mysql57
+    volumes:
+      - /opt/mysql/data:/var/lib/mysql
+      - /opt/mysql/conf/mysql.cnf:/etc/mysql/mysql.conf.d/mysqld.cnf
+    restart: always
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: 123456
+  redis:
+    image: registry.cn-hangzhou.aliyuncs.com/bigdata_cloudnative/redis:7.0.3
+    container_name: redis703
+    environment:
+      TZ: Asia/Shanghai
+    ports:
+      - 6379:6379
+    command: [ "redis-server","/etc/redis/redis.conf" ]
+    restart: always
+    volumes:
+      - /opt/redis/data:/data
+      - /opt/redis/config:/etc/redis

@@ -1,0 +1,14 @@
+version: "0.1"
+services:
+  redis:
+    image: registry.cn-hangzhou.aliyuncs.com/bigdata_cloudnative/redis:7.0.3
+    environment:
+      TZ: Asia/Shanghai
+    ports:
+      - 6379:6379
+    command:
+      - redis-server
+      - ./redis.conf
+    restart: always
+    volumes:
+      - /opt/redis/data:/data

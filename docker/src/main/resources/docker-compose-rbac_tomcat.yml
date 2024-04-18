@@ -1,0 +1,28 @@
+version: "0.1"
+services:
+  rbac_tomcat8:
+    image: registry.cn-hangzhou.aliyuncs.com/skrifer/cck:centos7-tomcat8.5-jdk11_x64_202403181351
+    environment:
+      - ES_HOST=http://10.165.32.84:9200
+      - SERVER_PORT=8080
+      - DB_HOST=10.165.32.84
+      - DB_PORT=3306
+      - DB_NAME=rbac2
+      - DB_USER=root
+      - DB_PASSWORD=123456
+      - REDIS_HOST=10.165.32.84
+      - REDIS_PASSWORD=123456
+      - REDIS_PORT=6379
+      - REDIS_DB=8
+      - TZ=Asia/Shanghai
+    ports:
+      - 8888:8080
+    restart: always
+    privileged: true
+    volumes:
+      - /usr/local/tomcat/webapps:/usr/local/tomcat/webapps
+      - /usr/local/tomcat/logs:/usr/local/tomcat/logs
+
+#mkdir创建目录  /usr/local/tomcat/webapps 和 /usr/local/tomcat/logs
+
+#cp /tmp/rbac.war /usr/local/tomcat/webapps/
