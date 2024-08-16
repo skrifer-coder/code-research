@@ -146,7 +146,40 @@ public class ListUtil {
         return list.stream().anyMatch(e -> predicate.test(e.get(innerListIndex)));
     }
 
+    /**
+     * 输出 source1 专有的元素 和 source2 专有的元素 及 source1 和 source2 共有的元素
+     * @param source1
+     * @param source2
+     * @param <T> 如果是自定义类型 必须重写 hashcode equals
+     */
+    private static <T> List<List<T>> compareAndDiff(List<T> source1, List<T> source2) {
+        List<List<T>> result = new ArrayList<>();
+        List<T> source1Copy = new ArrayList<>(source1);
+        source1Copy.removeAll(source2);
+        result.add(source1Copy);
+
+        List<T> source2Copy = new ArrayList<>(source2);
+        source2Copy.removeAll(source1);
+        result.add(source2Copy);
+
+        source1.retainAll(source2);
+        result.add(source1);
+        return result;
+    }
+
     public static void main(String[] args) {
+//        List<String> list1 = new ArrayList<>();
+//        list1.add("Apple");
+//        list1.add("Banana");
+//        list1.add("Cherry");
+//
+//        List<String> list2 = new ArrayList<>();
+//        list2.add("Banana");
+//        list2.add("Dragonfruit");
+//        list2.add("Elderberry");
+//
+//        compareAndDiff(list1, list2);
+
 //        List<Integer> list = new ArrayList<>(Arrays.asList(0, 0, 1, 0, 5, 0, 0, 0));
 //        List<Integer> list2 = new ArrayList<>(Arrays.asList(0, 0, 0, 1, 0, 0, 9, 0));
 //
