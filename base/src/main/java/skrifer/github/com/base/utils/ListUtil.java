@@ -122,7 +122,8 @@ public class ListUtil {
         int size = list.get(0).size();
 
         for (int i = 0; i < size; i++) {
-            if (match(list, i, predicate)) {
+            final int index = i;
+            if (list.stream().anyMatch(e -> predicate.test(e.get(index)))) {
                 if (firstIndex == -1) {
                     firstIndex = i;
                 }
@@ -140,10 +141,6 @@ public class ListUtil {
             }
         }
 
-    }
-
-    private static <T> boolean match(List<List<T>> list, int innerListIndex, Predicate<T> predicate){
-        return list.stream().anyMatch(e -> predicate.test(e.get(innerListIndex)));
     }
 
     /**
@@ -187,8 +184,11 @@ public class ListUtil {
 //        all.add(list);
 //        all.add(list2);
 //        deleteMultiListFrontEleAndRearEleByPredicate(all, integer -> integer > 0);
-//
+
 //        System.out.println(all);
+
+//        deleteFrontEleAndRearEleByPredicate(list, integer -> integer > 0);
+//        System.out.println(list);
     }
 
 }
