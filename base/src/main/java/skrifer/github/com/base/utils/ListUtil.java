@@ -29,30 +29,6 @@ public class ListUtil {
     }
 
     /**
-     * 模拟分页
-     *
-     * @param list       原始数据列表
-     * @param pageSize   每页显示的条数
-     * @param pageNumber 需要获取的页码 从1开始！！！！！！
-     * @return 指定页码的数据列表
-     */
-    public static <T> List<T> paginate(List<T> list, int pageSize, int pageNumber) {
-        // 计算跳过的条目数
-        int skip = (pageNumber - 1) * pageSize;
-
-        // 检查是否越界
-        if (skip >= list.size() || list.isEmpty()) {
-            return new ArrayList<>();
-        }
-
-        // 计算当前页可以包含的最大条目数
-        int end = Math.min(skip + pageSize, list.size());
-
-        // 通过subList获取分页后的列表
-        return list.subList(skip, end);
-    }
-
-    /**
      * 获取返回list集合的重复率最高的【limitElements】个元素(倒序从高到低)
      *
      * @param list
