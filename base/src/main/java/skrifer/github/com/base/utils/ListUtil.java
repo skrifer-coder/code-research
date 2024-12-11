@@ -9,7 +9,6 @@ import java.util.stream.Collectors;
 public class ListUtil {
 
     /**
-     *
      * @param list
      * @param indicesToRemove 要删除的索引列表
      * @param <T>
@@ -51,13 +50,11 @@ public class ListUtil {
     /**
      * 去除 list内满足predicate表达式的第一个元素之前的部分 和 满足predicate表达式最后一个元素 之后的部分
      *
-     * @param list 如需要排序 则提前自己排序好 并且 必须支持clear操作！！！
+     * @param list      如需要排序 则提前自己排序好 并且 必须支持clear操作！！！
      * @param predicate 条件删选器
-     * @param <T>
-     *
-     * e.g  list = [0, 0, 1, 0, 2, 3, 0, 5, 0, 0, 0]
-     *   predicate = (integer -> integer > 0)
-     *   return [1, 0, 2, 3, 0, 5]
+     * @param <T>       e.g  list = [0, 0, 1, 0, 2, 3, 0, 5, 0, 0, 0]
+     *                  predicate = (integer -> integer > 0)
+     *                  return [1, 0, 2, 3, 0, 5]
      */
     public static <T> void deleteFrontEleAndRearEleByPredicate(List<T> list, Predicate<T> predicate) {
         int firstIndex = -1;
@@ -83,13 +80,12 @@ public class ListUtil {
 
     /**
      * deleteFrontEleAndRearEleByPredicate 的 多并行list 增强版
-     * @param list list 内各子list 的长度必须一致！！！！
-     * @param predicate 条件删选器
-     * @param <T>
      *
-     *  e.g  list = [[0, 0, 1, 0, 5, 0, 0, 0],[0, 0, 0, 1, 0, 0, 9, 0]]
-     *      *   predicate = (integer -> integer > 0)
-     *      *   return [[1, 0, 5, 0, 0], [0, 1, 0, 0, 9]]
+     * @param list      list 内各子list 的长度必须一致！！！！
+     * @param predicate 条件删选器
+     * @param <T>       e.g  list = [[0, 0, 1, 0, 5, 0, 0, 0],[0, 0, 0, 1, 0, 0, 9, 0]]
+     *                  *   predicate = (integer -> integer > 0)
+     *                  *   return [[1, 0, 5, 0, 0], [0, 1, 0, 0, 9]]
      */
     public static <T> void deleteMultiListFrontEleAndRearEleByPredicate(List<List<T>> list, Predicate<T> predicate) {
         int firstIndex = -1;
@@ -121,9 +117,10 @@ public class ListUtil {
 
     /**
      * 输出 source1 专有的元素 和 source2 专有的元素 及 source1 和 source2 共有的元素
+     *
      * @param source1
      * @param source2
-     * @param <T> 如果是自定义类型 必须重写 hashcode equals
+     * @param <T>     如果是自定义类型 必须重写 hashcode equals
      */
     private static <T> List<List<T>> compareAndDiff(List<T> source1, List<T> source2) {
         List<List<T>> result = new ArrayList<>();
