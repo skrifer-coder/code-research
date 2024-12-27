@@ -1,0 +1,1 @@
+# 本模块场实用性较差, 建议直接转到 springboot-redisson模块！！！！！
